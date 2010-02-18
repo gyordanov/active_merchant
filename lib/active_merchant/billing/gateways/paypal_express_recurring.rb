@@ -19,11 +19,11 @@ module ActiveMerchant #:nodoc:
         "#{redirect_url}#{token}"
       end
 
-      def setup_agreement(options = {})
-        requires!(options, :description, :return_url, :cancel_return_url)
-      
-        commit 'SetCustomerBillingAgreement', build_setup_request(options)
-      end
+##      def setup_agreement(options = {})
+##        requires!(options, :description, :return_url, :cancel_return_url)
+##      
+##        commit 'SetCustomerBillingAgreement', build_setup_request(options)
+##      end
 
       def get_agreement(token)
         commit 'GetBillingAgreementCustomerDetails', build_get_agreement_request(token)
@@ -35,11 +35,11 @@ module ActiveMerchant #:nodoc:
       # self.display_name = 'PayPal Express Checkout Recurring'
       # API_VERSION = 50.0
 
-      # def setup_agreement(options = {})
-      #   requires!(options, :description, :return_url, :cancel_return_url)
-      # 
-      #   commit 'SetExpressCheckout', build_setup_request('Authorization', options)
-      # end
+      def setup_agreement(options = {})
+        requires!(options, :description, :return_url, :cancel_return_url)
+      
+        commit 'SetExpressCheckout', build_setup_request('Authorization', options)
+      end
 
       def details_for(token)
         commit 'GetExpressCheckoutDetails', build_get_details_request(token)
@@ -77,24 +77,24 @@ module ActiveMerchant #:nodoc:
 
       private
 
-      def build_setup_request(options)
-        xml = Builder::XmlMarkup.new :indent => 2
-        xml.tag! 'SetCustomerBillingAgreementReq', 'xmlns' => PAYPAL_NAMESPACE do
-          xml.tag! 'SetCustomerBillingAgreementRequest', 'xmlns:n2' => EBAY_NAMESPACE do
-            xml.tag! 'n2:Version', API_VERSION
-            xml.tag! 'n2:SetCustomerBillingAgreementRequestDetails' do
-              xml.tag! 'n2:BillingAgreementDetails' do
-                xml.tag! 'n2:BillingType', 'RecurringPayments'
-                xml.tag! 'n2:BillingAgreementDescription', options[:description]
-              end
-              xml.tag! 'n2:ReturnURL', options[:return_url]
-              xml.tag! 'n2:CancelURL', options[:cancel_return_url]
-            end
-          end
-        end
-
-        xml.target!
-      end
+##      def build_setup_request(options)
+##        xml = Builder::XmlMarkup.new :indent => 2
+##        xml.tag! 'SetCustomerBillingAgreementReq', 'xmlns' => PAYPAL_NAMESPACE do
+##          xml.tag! 'SetCustomerBillingAgreementRequest', 'xmlns:n2' => EBAY_NAMESPACE do
+##            xml.tag! 'n2:Version', API_VERSION
+##            xml.tag! 'n2:SetCustomerBillingAgreementRequestDetails' do
+##              xml.tag! 'n2:BillingAgreementDetails' do
+##                xml.tag! 'n2:BillingType', 'RecurringPayments'
+##                xml.tag! 'n2:BillingAgreementDescription', options[:description]
+##              end
+##              xml.tag! 'n2:ReturnURL', options[:return_url]
+##              xml.tag! 'n2:CancelURL', options[:cancel_return_url]
+##            end
+##          end
+##        end
+##
+##        xml.target!
+##      end
 
       def build_get_agreement_request(token)
         xml = Builder::XmlMarkup.new :indent => 2
@@ -108,26 +108,26 @@ module ActiveMerchant #:nodoc:
         xml.target!
       end
 
-      # def build_setup_request(action, options)
-      #   xml = Builder::XmlMarkup.new :indent => 2
-      #   xml.tag! 'SetExpressCheckoutReq', 'xmlns' => PAYPAL_NAMESPACE do
-      #     xml.tag! 'SetExpressCheckoutRequest', 'xmlns:n2' => EBAY_NAMESPACE do
-      #       xml.tag! 'n2:Version', API_VERSION
-      #       xml.tag! 'n2:SetExpressCheckoutRequestDetails' do
-      #         xml.tag! 'n2:PaymentAction', action
-      #         xml.tag! 'n2:NoShipping', options[:no_shipping] ? '1' : '0'
-      #         xml.tag! 'n2:ReturnURL', options[:return_url]
-      #         xml.tag! 'n2:CancelURL', options[:cancel_return_url]
-      #         xml.tag! 'n2:BillingAgreementDetails' do
-      #           xml.tag! 'n2:BillingType', 'RecurringPayments'
-      #           xml.tag! 'n2:BillingAgreementDescription', options[:description]
-      #         end
-      #       end
-      #     end
-      #   end
-      # 
-      #   xml.target!
-      # end
+      def build_setup_request(action, options)
+        xml = Builder::XmlMarkup.new :indent => 2
+        xml.tag! 'SetExpressCheckoutReq', 'xmlns' => PAYPAL_NAMESPACE do
+          xml.tag! 'SetExpressCheckoutRequest', 'xmlns:n2' => EBAY_NAMESPACE do
+            xml.tag! 'n2:Version', API_VERSION
+            xml.tag! 'n2:SetExpressCheckoutRequestDetails' do
+              xml.tag! 'n2:PaymentAction', action
+              xml.tag! 'n2:NoShipping', options[:no_shipping] ? '1' : '0'
+              xml.tag! 'n2:ReturnURL', options[:return_url]
+              xml.tag! 'n2:CancelURL', options[:cancel_return_url]
+              xml.tag! 'n2:BillingAgreementDetails' do
+                xml.tag! 'n2:BillingType', 'RecurringPayments'
+                xml.tag! 'n2:BillingAgreementDescription', options[:description]
+              end
+            end
+          end
+        end
+      
+        xml.target!
+      end
 
       def build_get_details_request(token)
         xml = Builder::XmlMarkup.new :indent => 2
